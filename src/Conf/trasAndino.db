@@ -1,0 +1,105 @@
+-- ==========================
+-- TABLA PERSONA
+-- ==========================
+CREATE TABLE `Persona` (
+    `id_persona` INT NOT NULL AUTO_INCREMENT,
+    `nombre_completo` VARCHAR(100) NOT NULL,
+    `apellido_completo` VARCHAR(100) NOT NULL,
+    `direccion` VARCHAR(150) DEFAULT NULL,
+    `cedula` VARCHAR(20) NOT NULL,
+    `telefono` VARCHAR(20) DEFAULT NULL,
+    `correo` VARCHAR(100) DEFAULT NULL,
+    `fecha_cumpleaños` DATE DEFAULT NULL,
+    `rol` ENUM('ASOCIADO','CONDUCTOR','EMPLEADO') NOT NULL DEFAULT 'EMPLEADO',
+    PRIMARY KEY (`id_persona`),
+    UNIQUE KEY `persona_cedula_unique` (`cedula`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ==========================
+-- TABLA VEHICULO
+-- ==========================
+CREATE TABLE `Vehiculo` (
+    `placa` VARCHAR(20) NOT NULL,
+    `id_persona` INT NOT NULL, -- Dueño del vehículo (ASOCIADO)
+    `motor` VARCHAR(50) DEFAULT NULL,
+    `chasis` VARCHAR(50) DEFAULT NULL,
+    `modelo` VARCHAR(50) DEFAULT NULL,
+    `marca` VARCHAR(50) DEFAULT NULL,
+    `linea` VARCHAR(50) DEFAULT NULL,
+    `combustible` VARCHAR(20) DEFAULT NULL,
+    `cilindraje` VARCHAR(20) DEFAULT NULL,
+    `movil` VARCHAR(20) DEFAULT NULL,
+    PRIMARY KEY (`placa`),
+    KEY `fk_vehiculo_persona` (`id_persona`),
+    CONSTRAINT `fk_vehiculo_persona` FOREIGN KEY (`id_persona`) REFERENCES `Persona` (`id_persona`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ==========================
+-- TABLA CONDUCTOR VEHICULO (N:M entre Persona y Vehiculo)
+-- ==========================
+CREATE TABLE `ConductorVehiculo` (
+    `id_conductor_vehiculo` INT NOT NULL AUTO_INCREMENT,
+    `id_persona` INT NOT NULL,
+    `placa` VARCHAR(20) NOT NULL,
+    `jornada` VARCHAR(20) DEFAULT NULL,
+    `fecha_inicio` DATE NOT NULL,
+    `fecha_fin` DATE DEFAULT NULL,
+    PRIMARY KEY (`id_conductor_vehiculo`),
+    KEY `fk_conductor_persona` (`id_persona`),
+    KEY `fk_conductor_vehiculo` (`placa`),
+    CONSTRAINT `fk_conductor_persona` FOREIGN KEY (`id_persona`) REFERENCES `Persona` (`id_persona`),
+    CONSTRAINT `fk_conductor_vehiculo` FOREIGN KEY (`placa`) REFERENCES `Vehiculo` (`placa`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ==========================
+-- TABLA TIPO MANTENIMIENTO (catálogo)
+-- ==========================
+CREATE TABLE `TipoMantenimiento` (
+    `id_tipo_mantenimiento` INT NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(50) NOT NULL, -- Ej: Frenos, Aceite, Filtros
+    PRIMARY KEY (`id_tipo_mantenimiento`),
+    UNIQUE KEY `tipo_mantenimiento_unique` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ==========================
+-- TABLA MANTENIMIENTO
+-- ==========================
+CREATE TABLE `Mantenimiento` (
+    `id_mantenimiento` INT NOT NULL AUTO_INCREMENT,
+    `placa` VARCHAR(20) NOT NULL,
+    `id_tipo_mantenimiento` INT NOT NULL,
+    `observaciones` VARCHAR(200) DEFAULT NULL,
+    `fecha_mantenimiento` DATE DEFAULT NULL,
+    PRIMARY KEY (`id_mantenimiento`),
+    KEY `fk_mantenimiento_vehiculo` (`placa`),
+    KEY `fk_mantenimiento_tipo` (`id_tipo_mantenimiento`),
+    CONSTRAINT `fk_mantenimiento_vehiculo` FOREIGN KEY (`placa`) REFERENCES `Vehiculo` (`placa`),
+    CONSTRAINT `fk_mantenimiento_tipo` FOREIGN KEY (`id_tipo_mantenimiento`) REFERENCES `TipoMantenimiento` (`id_tipo_mantenimiento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ==========================
+-- TABLA TIPO DOCUMENTO VEHICULO (catálogo)
+-- ==========================
+CREATE TABLE `TipoDocumentoVehiculo` (
+    `id_tipo_documento` INT NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(50) NOT NULL, -- Ej: SOAT, Tecnomecánica, Tarjeta de propiedad
+    PRIMARY KEY (`id_tipo_documento`),
+    UNIQUE KEY `tipo_documento_unique` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ==========================
+-- TABLA DOCUMENTO VEHICULO
+-- ==========================
+CREATE TABLE `DocumentoVehiculo` (
+    `id_documento` INT NOT NULL AUTO_INCREMENT,
+    `placa` VARCHAR(20) NOT NULL,
+    `id_tipo_documento` INT NOT NULL,
+    `fecha_emision` DATE DEFAULT NULL,
+    `fecha_vencimiento` DATE DEFAULT NULL,
+    `estado` VARCHAR(20) DEFAULT NULL,
+    PRIMARY KEY (`id_documento`),
+    KEY `fk_documento_vehiculo` (`placa`),
+    KEY `fk_documento_tipo` (`id_tipo_documento`),
+    CONSTRAINT `fk_documento_vehiculo` FOREIGN KEY (`placa`) REFERENCES `Vehiculo` (`placa`),
+    CONSTRAINT `fk_documento_tipo` FOREIGN KEY (`id_tipo_documento`) REFERENCES `TipoDocumentoVehiculo` (`id_tipo_documento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
