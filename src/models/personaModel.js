@@ -4,17 +4,17 @@ class Persona {
   //  Obtiene todas las personas registradas en el sistema
   static async findAll() {
     try {
-      console.log('🔍 Ejecutando findAll en Persona...');
+      console.log('  Ejecutando findAll en Persona...');
       const [rows] = await db.execute(
         "SELECT * FROM Persona ORDER BY id_persona DESC"
       );
-      console.log(`✅ Personas encontradas: ${rows.length}`);
+      console.log(`  Personas encontradas: ${rows.length}`);
       if (rows.length === 0) {
-        console.log('⚠️ No se encontraron registros en la tabla Persona');
+        console.log('  No se encontraron registros en la tabla Persona');
       }
       return rows;
     } catch (error) {
-      console.error('❌ Error en findAll:', error.message);
+      console.error('  Error en findAll:', error.message);
       throw error;
     }
   }

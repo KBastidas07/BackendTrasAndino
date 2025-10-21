@@ -5,14 +5,14 @@ import TipoDocumentoVehiculo from "../models/tipoDocumentoVehiculoModel.js";
 export const getAllTipoDocumentoVehiculo = async (req, res, next) => {
     try {
         const tipos = await TipoDocumentoVehiculo.findAll();
-        console.log(`📊 Enviando respuesta con ${tipos.length} tipos de documento de vehículo`);
+        console.log(`  Enviando respuesta con ${tipos.length} tipos de documento de vehículo`);
         res.status(200).json({
             status: "success",
             count: tipos.length,
             data: tipos
         });
     } catch (error) {
-        console.error('❌ Error en getAllTipoDocumentoVehiculo:', error);
+        console.error('  Error en getAllTipoDocumentoVehiculo:', error);
         next(errorTypes.ServerError("Error al obtener los tipos de documento de vehículo"));
     }
 };
@@ -29,7 +29,7 @@ export const getTipoDocumentoVehiculoById = async (req, res, next) => {
             data: tipo
         });
     } catch (error) {
-        console.error('❌ Error en getTipoDocumentoVehiculoById:', error);
+        console.error('  Error en getTipoDocumentoVehiculoById:', error);
         next(error);
     }
 };
@@ -51,7 +51,7 @@ export const createTipoDocumentoVehiculo = async (req, res, next) => {
             }
         });
     } catch (error) {
-        console.error('❌ Error en createTipoDocumentoVehiculo:', error);
+        console.error('  Error en createTipoDocumentoVehiculo:', error);
         next(error);
     }
 };
@@ -73,7 +73,7 @@ export const updateTipoDocumentoVehiculo = async (req, res, next) => {
             message: "Tipo de documento de vehículo actualizado exitosamente"
         });
     } catch (error) {
-        console.error('❌ Error en updateTipoDocumentoVehiculo:', error);
+        console.error('  Error en updateTipoDocumentoVehiculo:', error);
         next(error);
     }
 };
@@ -91,7 +91,7 @@ export const deleteTipoDocumentoVehiculo = async (req, res, next) => {
             message: "Tipo de documento de vehículo eliminado exitosamente"
         });
     } catch (error) {
-        console.error('❌ Error en deleteTipoDocumentoVehiculo:', error);
+        console.error('  Error en deleteTipoDocumentoVehiculo:', error);
         if (error.code === 'ER_ROW_IS_REFERENCED_2') {
             next(errorTypes.ConflictError("No se puede eliminar el tipo de documento de vehículo porque está siendo utilizado"));
         } else {

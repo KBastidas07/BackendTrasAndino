@@ -5,14 +5,14 @@ import Mantenimiento from "../models/mantenimientoModel.js";
 export const getAllMantenimiento = async (req, res, next) => {
     try {
         const mantenimientos = await Mantenimiento.findAll();
-        console.log(`📊 Enviando respuesta con ${mantenimientos.length} mantenimientos`);
+        console.log(`  Enviando respuesta con ${mantenimientos.length} mantenimientos`);
         res.status(200).json({
             status: "success",
             count: mantenimientos.length,
             data: mantenimientos
         });
     } catch (error) {
-        console.error("❌ Error en getAllMantenimiento:", error);
+        console.error("  Error en getAllMantenimiento:", error);
         next(errorTypes.ServerError("Error al obtener los mantenimientos"));
     }
 };
@@ -29,7 +29,7 @@ export const getAllMantenimiento = async (req, res, next) => {
             data: mantenimiento
         });
     } catch (error) {
-        console.error("❌ Error en getMantenimientoById:", error);
+        console.error("  Error en getMantenimientoById:", error);
         next(error);
     }
 };
@@ -52,7 +52,7 @@ export const getMantenimientosByPlaca = async (req, res, next) => {
       data: mantenimientos,
     });
   } catch (error) {
-    console.error("❌ Error en getMantenimientosByPlaca:", error);
+    console.error("  Error en getMantenimientosByPlaca:", error);
     next(error);
   }
 };
@@ -77,7 +77,7 @@ export const createMantenimiento = async (req, res, next) => {
             }
         });
     } catch (error) {
-        console.error("❌ Error en createMantenimiento:", error);
+        console.error("  Error en createMantenimiento:", error);
         if (error.code === "ER_NO_REFERENCED_ROW_2") {
             next(errorTypes.ValidationError("El vehículo o tipo de mantenimiento no existe"));
         } else {
@@ -101,7 +101,7 @@ export const updateMantenimiento = async (req, res, next) => {
             message: "Mantenimiento actualizado exitosamente"
         });
     } catch (error) {
-        console.error("❌ Error en updateMantenimiento:", error);
+        console.error("  Error en updateMantenimiento:", error);
         if (error.code === "ER_NO_REFERENCED_ROW_2") {
             next(errorTypes.ValidationError("El vehículo o tipo de mantenimiento no existe"));
         } else {
@@ -125,7 +125,7 @@ export const deleteMantenimiento = async (req, res, next) => {
             message: "Mantenimiento eliminado exitosamente"
         });
     } catch (error) {
-        console.error("❌ Error en deleteMantenimiento:", error);
+        console.error("  Error en deleteMantenimiento:", error);
         next(error);
     }
 };

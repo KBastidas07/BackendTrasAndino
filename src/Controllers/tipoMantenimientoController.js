@@ -5,14 +5,14 @@ import TipoMantenimiento from "../models/tipoMantenimientoModel.js";
 export const getAllTipoMantenimiento = async (req, res, next) => {
     try {
         const tipos = await TipoMantenimiento.findAll();
-        console.log(`📊 Enviando respuesta con ${tipos.length} tipos de mantenimiento`);
+        console.log(`  Enviando respuesta con ${tipos.length} tipos de mantenimiento`);
         res.status(200).json({
             status: "success",
             count: tipos.length,
             data: tipos
         });
     } catch (error) {
-        console.error('❌ Error en getAllTipoMantenimiento:', error);
+        console.error('  Error en getAllTipoMantenimiento:', error);
         next(errorTypes.ServerError("Error al obtener los tipos de mantenimiento"));
     }
 };
@@ -29,7 +29,7 @@ export const getTipoMantenimientoById = async (req, res, next) => {
             data: tipo
         });
     } catch (error) {
-        console.error('❌ Error en getTipoMantenimientoById:', error);
+        console.error('  Error en getTipoMantenimientoById:', error);
         next(error);
     }
 };
@@ -51,7 +51,7 @@ export const createTipoMantenimiento = async (req, res, next) => {
             }
         });
     } catch (error) {
-        console.error('❌ Error en createTipoMantenimiento:', error);
+        console.error('  Error en createTipoMantenimiento:', error);
         next(error);
     }
 };
@@ -73,7 +73,7 @@ export const updateTipoMantenimiento = async (req, res, next) => {
             message: "Tipo de mantenimiento actualizado exitosamente"
         });
     } catch (error) {
-        console.error('❌ Error en updateTipoMantenimiento:', error);
+        console.error('  Error en updateTipoMantenimiento:', error);
         next(error);
     }
 };
@@ -91,7 +91,7 @@ export const deleteTipoMantenimiento = async (req, res, next) => {
             message: "Tipo de mantenimiento eliminado exitosamente"
         });
     } catch (error) {
-        console.error('❌ Error en deleteTipoMantenimiento:', error);
+        console.error('  Error en deleteTipoMantenimiento:', error);
         if (error.code === 'ER_ROW_IS_REFERENCED_2') {
             next(errorTypes.ConflictError("No se puede eliminar el tipo de mantenimiento porque está siendo utilizado"));
         } else {

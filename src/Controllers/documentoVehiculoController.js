@@ -64,7 +64,7 @@ export const getAllDocumentoVehiculo = async (req, res, next) => {
             data: documentos
         });
     } catch (error) {
-        console.error("❌ Error en getAllDocumentoVehiculo:", error);
+        console.error("  Error en getAllDocumentoVehiculo:", error);
         next(errorTypes.ServerError("Error al obtener los documentos de vehículos"));
     }
 };
@@ -81,7 +81,7 @@ export const getAllDocumentoVehiculo = async (req, res, next) => {
             data: documento
         });
     } catch (error) {
-        console.error("❌ Error en getDocumentoVehiculoById:", error);
+        console.error("  Error en getDocumentoVehiculoById:", error);
         next(error);
     }
 };
@@ -102,7 +102,7 @@ export const getDocumentosByPlaca = async (req, res, next) => {
             data: documentos
         });
     } catch (error) {
-        console.error("❌ Error en getDocumentosByPlaca:", error);
+        console.error("  Error en getDocumentosByPlaca:", error);
         next(error);
     }
 };
@@ -129,7 +129,7 @@ export const createDocumentoVehiculo = async (req, res, next) => {
             data: { id: newId }
         });
     } catch (error) {
-        console.error("❌ Error en createDocumentoVehiculo:", error);
+        console.error("  Error en createDocumentoVehiculo:", error);
         if (error.code === "ER_NO_REFERENCED_ROW_2") {
             next(errorTypes.ValidationError("El vehículo o tipo de documento no existe"));
         } else {
@@ -159,7 +159,7 @@ export const updateDocumentoVehiculo = async (req, res, next) => {
             message: "Documento de vehículo actualizado exitosamente"
         });
     } catch (error) {
-        console.error("❌ Error en updateDocumentoVehiculo:", error);
+        console.error("  Error en updateDocumentoVehiculo:", error);
         if (error.code === "ER_NO_REFERENCED_ROW_2") {
             next(errorTypes.ValidationError("El vehículo o tipo de documento no existe"));
         } else {
@@ -183,7 +183,7 @@ export const deleteDocumentoVehiculo = async (req, res, next) => {
             message: "Documento de vehículo eliminado exitosamente"
         });
     } catch (error) {
-        console.error("❌ Error en deleteDocumentoVehiculo:", error);
+        console.error("  Error en deleteDocumentoVehiculo:", error);
         next(error);
     }
 };

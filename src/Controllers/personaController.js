@@ -77,14 +77,14 @@ const validarFechaCumpleanos = (fecha) => {
 export const getAllPersonas = async (req, res, next) => {
     try {
         const personas = await Persona.findAll();
-        console.log(`📊 Enviando respuesta con ${personas.length} personas`);
+        console.log(`  Enviando respuesta con ${personas.length} personas`);
         res.status(200).json({
             status: "success",
             count: personas.length,
             data: personas,
         });
     } catch (error) {
-        console.error('❌ Error en getAllPersonas:', error);
+        console.error('  Error en getAllPersonas:', error);
         next(errorTypes.ServerError("Error al obtener las personas"));
     }
 };

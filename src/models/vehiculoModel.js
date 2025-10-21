@@ -4,20 +4,20 @@ class Vehiculo {
   // Obtiene todas los vehiculos registrados en el sistema
   static async findAll() {
     try {
-      console.log("🔍 Ejecutando findAll en Vehiculo...");
+      console.log("  Ejecutando findAll en Vehiculo...");
       const [rows] = await db.execute(
         `SELECT v.*, p.nombre_completo, p.apellido_completo
          FROM vehiculo v
          LEFT JOIN persona p ON v.id_persona = p.id_persona
          ORDER BY v.placa DESC`
       );
-      console.log(`✅ Vehiculos encontrados: ${rows.length}`);
+      console.log(`  Vehiculos encontrados: ${rows.length}`);
       if (rows.length === 0) {
-        console.log("⚠️ No se encontraron registros en la tabla Vehiculo");
+        console.log("  No se encontraron registros en la tabla Vehiculo");
       }
       return rows;
     } catch (error) {
-      console.error("❌ Error en findAll:", error.message);
+      console.error("  Error en findAll:", error.message);
       throw error;
     }
   }
@@ -46,7 +46,7 @@ class Vehiculo {
       throw new Error("Los campos placa y id_persona son obligatorios");
     }
 
-    // 1️⃣ Verificar que la persona exista y sea ASOCIADO
+    //  Verificar que la persona exista y sea ASOCIADO
     const [personaRows] = await db.execute(
       "SELECT rol FROM persona WHERE id_persona = ?",
       [vehiculoData.id_persona]
@@ -61,7 +61,7 @@ class Vehiculo {
       throw new Error("Solo las personas con rol ASOCIADO pueden registrar un vehículo");
     }
 
-    // 2️⃣ Verificar que el asociado no tenga ya un vehículo registrado
+    //  Verificar que el asociado no tenga ya un vehículo registrado
     const [existente] = await db.execute(
       "SELECT placa FROM vehiculo WHERE id_persona = ?",
       [vehiculoData.id_persona]
@@ -71,7 +71,7 @@ class Vehiculo {
       throw new Error("Este asociado ya tiene un vehículo registrado");
     }
 
-    // 3️⃣ Insertar el nuevo vehículo
+    // Insertar el nuevo vehículo
     const query = `
       INSERT INTO vehiculo (
         placa,
@@ -106,7 +106,7 @@ class Vehiculo {
       throw new Error("No se pudo crear el vehículo");
     }
 
-    // 4️⃣ Retornar los datos creados
+    //  Retornar los datos creados
     return {
       placa: vehiculoData.placa,
       ...vehiculoData,

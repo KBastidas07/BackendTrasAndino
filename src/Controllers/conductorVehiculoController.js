@@ -7,7 +7,7 @@ export const getAllConductorVehiculo = async (req, res, next) => {
   try {
     const conductores = await ConductorVehiculo.findAll();
     console.log(
-      `📊 Enviando respuesta con ${conductores.length} conductores-vehículos`
+      `Enviando respuesta con ${conductores.length} conductores-vehículos`
     );
     res.status(200).json({
       status: "success",
@@ -15,7 +15,7 @@ export const getAllConductorVehiculo = async (req, res, next) => {
       data: conductores,
     });
   } catch (error) {
-    console.error("❌ Error en getAllConductoresVehiculos:", error);
+    console.error("Error en getAllConductoresVehiculos:", error);
     next(errorTypes.ServerError("Error al obtener los conductores-vehículos"));
   }
 };
@@ -32,7 +32,7 @@ export const getConductorVehiculoById = async (req, res, next) => {
       data: conductor,
     });
   } catch (error) {
-    console.error("❌ Error al obtener el conductor:", error);
+    console.error("  Error al obtener el conductor:", error);
     res.status(500).json({ error: "Error al obtener el registro" });
   }
 };
@@ -65,7 +65,7 @@ export const createConductorVehiculo = async (req, res, next) => {
       data: { id: newId }
     });
   } catch (error) {
-    console.error("❌ Error al crear conductor-vehículo:", error);
+    console.error("  Error al crear conductor-vehículo:", error);
     next(error);
   }
 };
@@ -80,7 +80,7 @@ export const updateConductorVehiculo = async (req, res) => {
 
     res.json({ message: "ConductorVehiculo actualizado" });
   } catch (error) {
-    console.error("❌ Error al actualizar:", error);
+    console.error("  Error al actualizar:", error);
     res.status(500).json({ error: "Error al actualizar el registro" });
   }
 };
@@ -95,7 +95,7 @@ export const deleteConductorVehiculo = async (req, res) => {
 
     res.json({ message: "ConductorVehiculo eliminado" });
   } catch (error) {
-    console.error("❌ Error al eliminar:", error);
+    console.error("  Error al eliminar:", error);
     res.status(500).json({ error: "Error al eliminar el registro" });
   }
 };

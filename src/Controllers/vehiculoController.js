@@ -44,14 +44,14 @@ const validarAnioModelo = (anio) => {
 export const getAllVehiculos = async (req, res, next) => {
   try {
     const vehiculos = await Vehiculo.findAll();
-    console.log(`📊 Enviando respuesta con ${vehiculos.length} vehiculos`);
+    console.log(`  Enviando respuesta con ${vehiculos.length} vehiculos`);
     res.status(200).json({
       status: "success",
       count: vehiculos.length,
       data: vehiculos,
     });
   } catch (error) {
-    console.error("❌ Error en getAllVehiculos:", error);
+    console.error("  Error en getAllVehiculos:", error);
     next(errorTypes.ServerError("Error al obtener los vehiculos"));
   }
 };

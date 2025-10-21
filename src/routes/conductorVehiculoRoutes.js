@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-//Ruta para obtener todos los registros de conductoresVehiculos
+//Ruta para obtener todos los conductorVehiculo
 router.get('/listaConductorvehiculo', getAllConductorVehiculo);
 
 //Ruta para buscar un conductorVehiculo por su ID
