@@ -1,7 +1,7 @@
 import { errorTypes } from "../middlewares/errorHandler.js";
 import DocumentoVehiculo from "../models/documentoVehiculoModel.js";
 
-// 🧩 VALIDACIONES
+//VALIDACIONES
 
 // Validar fecha de emisión
 const validarFechaEmision = (fechaEmision) => {
@@ -37,7 +37,7 @@ const validarFechaVencimiento = (fechaEmision, fechaVencimiento) => {
 
 // Validar estado
 const validarEstado = (estado) => {
-    const estadosValidos = ["Vigente", "No vigente", "En trámite"];
+    const estadosValidos = ["Vigente", "Vencido", "Pendiente"];
 
     if (!estado) return true; // campo opcional
 
@@ -46,7 +46,7 @@ const validarEstado = (estado) => {
 
     if (!valido) {
         throw errorTypes.ValidationError(
-            "El estado debe ser uno de los siguientes: Vigente, No vigente o En trámite"
+            "El estado debe ser uno de los siguientes: Vigente, Vencido o Pendiente"
         );
     }
 
@@ -57,14 +57,14 @@ const validarEstado = (estado) => {
 export const getAllDocumentoVehiculo = async (req, res, next) => {
     try {
         const documentos = await DocumentoVehiculo.findAll();
-        console.log(`📄 Enviando respuesta con ${documentos.length} documentos de vehículo`);
+        console.log(`Enviando respuesta con ${documentos.length} documentos de vehículo`);
         res.status(200).json({
             status: "success",
             count: documentos.length,
             data: documentos
         });
     } catch (error) {
-        console.error("  Error en getAllDocumentoVehiculo:", error);
+        console.error("Error en getAllDocumentoVehiculo:", error);
         next(errorTypes.ServerError("Error al obtener los documentos de vehículos"));
     }
 };
@@ -102,7 +102,7 @@ export const getDocumentosByPlaca = async (req, res, next) => {
             data: documentos
         });
     } catch (error) {
-        console.error("  Error en getDocumentosByPlaca:", error);
+        console.error("Error en getDocumentosByPlaca:", error);
         next(error);
     }
 };
@@ -111,15 +111,15 @@ export const getDocumentosByPlaca = async (req, res, next) => {
 export const createDocumentoVehiculo = async (req, res, next) => {
     try {
         // Validar campos requeridos
-        const requiredFields = ["placa", "id_tipo_documento", "fecha_emision", "fecha_vencimiento"];
+        const requiredFields = ["placa", "idTipoDocumento", "fechaEmision", "fechaVencimiento"];
         for (const field of requiredFields) {
             if (!req.body[field]) {
                 throw errorTypes.ValidationError(`El campo ${field} es requerido`);
             }
         }
         //Aplicamos las validaciones
-        validarFechaEmision(req.body.fecha_emision);
-        validarFechaVencimiento(req.body.fecha_emision, req.body.fecha_vencimiento);
+        validarFechaEmision(req.body.fechaEmision);
+        validarFechaVencimiento(req.body.fechaEmision, req.body.fechaVencimiento);
         if (req.body.estado) validarEstado(req.body.estado);
 
         const newId = await DocumentoVehiculo.create(req.body);
@@ -183,7 +183,7 @@ export const deleteDocumentoVehiculo = async (req, res, next) => {
             message: "Documento de vehículo eliminado exitosamente"
         });
     } catch (error) {
-        console.error("  Error en deleteDocumentoVehiculo:", error);
+        console.error("Error en deleteDocumentoVehiculo:", error);
         next(error);
     }
 };

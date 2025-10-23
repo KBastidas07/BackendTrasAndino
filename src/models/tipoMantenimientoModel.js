@@ -3,14 +3,14 @@ import db from "../Conf/dbTasandino.js";
 class TipoMantenimiento {
      // Obtener todos los tipos
   static async findAll() {
-    const [rows] = await db.execute("SELECT * FROM tipomantenimiento ORDER BY id_tipo_mantenimiento ASC");
+    const [rows] = await db.execute("SELECT * FROM TipoMantenimiento ORDER BY idTipoMantenimiento ASC");
     return rows;
   }
 
   // Buscar tipo de mantenimineto por ID
   static async findById(id) {
     const [rows] = await db.execute(
-      "SELECT * FROM tipomantenimiento WHERE id_tipo_mantenimiento = ?",
+      "SELECT * FROM TipoMantenimiento WHERE idTipoMantenimiento = ?",
       [id]
     );
     return rows[0];
@@ -20,7 +20,7 @@ class TipoMantenimiento {
   static async create(data) {
     const { nombre } = data;
     const [result] = await db.execute(
-      "INSERT INTO tipomantenimiento (nombre) VALUES (?)",
+      "INSERT INTO TipoMantenimiento (nombre) VALUES (?)",
       [nombre]
     );
     return result.insertId;
@@ -30,7 +30,7 @@ class TipoMantenimiento {
   static async update(id, data) {
     const { nombre } = data;
     const [result] = await db.execute(
-      "UPDATE tipomantenimiento SET nombre = ? WHERE id_tipo_mantenimiento = ?",
+      "UPDATE TipoMantenimiento SET nombre = ? WHERE idTipoMantenimiento = ?",
       [nombre, id]
     );
     return result.affectedRows;
@@ -39,7 +39,7 @@ class TipoMantenimiento {
   // Eliminar tipo  mantenimineto
   static async delete(id) {
     const [result] = await db.execute(
-      "DELETE FROM tipomantenimiento WHERE id_tipo_mantenimiento = ?",
+      "DELETE FROM TipoMantenimiento WHERE idTipoMantenimiento = ?",
       [id]
     );
     return result.affectedRows;

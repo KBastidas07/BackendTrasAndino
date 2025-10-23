@@ -1,112 +1,83 @@
 import db from "../Conf/dbTasandino.js";
 
 class Mantenimiento {
-    // Obtener todos los registros de mantenimiento
-    static async findAll() {
-         const [rows] = await db.execute(`
-      SELECT 
-        m.id_mantenimiento,
-        m.placa,
-        v.marca,
-        v.linea,
-        tm.nombre AS tipo_mantenimiento,
-        m.observaciones,
-        m.fecha_mantenimiento
-      FROM mantenimiento m
-      LEFT JOIN vehiculo v ON m.placa = v.placa
-      LEFT JOIN tipomantenimiento tm ON m.id_tipo_mantenimiento = tm.id_tipo_mantenimiento
-      ORDER BY m.fecha_mantenimiento DESC
-    `);
-    return rows; // Retorna todos los mantenimientos con información adicional
-    }
+  // Obtener todos los registros de mantenimiento
+ static async findAll() {
+  const [rows] = await db.execute(`
+    SELECT 
+      m.idMantenimiento,
+      v.placa,
+      v.marca,
+      v.linea,
+      tm.nombre AS tipoMantenimiento,
+      ee.NombreEncargado AS empresaExterna,
+      m.observaciones,
+      m.fechaMantenimiento
+    FROM mantenimiento m
+    LEFT JOIN vehiculo v ON m.idVehiculo = v.idVehiculo
+    LEFT JOIN tipomantenimiento tm ON m.idTipoMantenimiento = tm.idTipoMantenimiento
+    LEFT JOIN empresaexterna ee ON m.idEmpresaExterna = ee.idEmpresaExterna
+    ORDER BY m.fechaMantenimiento ASC
+  `);
+  return rows;
+}
 
-    //Buscar mantenimiento por su ID
-  /*  static async findById(id) {
-    const [rows] = await db.execute(
-      `
-      SELECT 
-        m.id_mantenimiento,
-        m.placa,
-        v.marca,
-        v.linea,
-        tm.nombre AS tipo_mantenimiento,
-        m.observaciones,
-        m.fecha_mantenimiento
-      FROM mantenimiento m
-      LEFT JOIN vehiculo v ON m.placa = v.placa
-      LEFT JOIN tipomantenimiento tm ON m.id_tipo_mantenimiento = tm.id_tipo_mantenimiento
-      WHERE m.id_mantenimiento = ?
-      `,
-      [id]
-    );
-    return rows[0]; // Devuelve un solo registro
-  }
-*/
-  //Buscar mantenimientos por placa
-  static async findByPlaca(placa) {
-    const [rows] = await db.execute(
-      `
-      SELECT 
-        m.id_mantenimiento,
-        m.placa,
-        v.marca,
-        v.linea,
-        tm.nombre AS tipo_mantenimiento,
-        m.observaciones,
-        m.fecha_mantenimiento
-      FROM mantenimiento m
-      LEFT JOIN vehiculo v ON m.placa = v.placa
-      LEFT JOIN tipomantenimiento tm ON m.id_tipo_mantenimiento = tm.id_tipo_mantenimiento
-      WHERE m.placa = ?
-      ORDER BY m.fecha_mantenimiento DESC
-      `,
-      [placa]
-    );
-    return rows;
-  }
+
+  // Buscar mantenimientos por placa
+static async findByPlaca(placa) {
+  const [rows] = await db.execute(
+    `SELECT 
+       m.idMantenimiento,
+       v.placa,
+       v.marca,
+       v.linea,
+       tm.nombre AS tipoMantenimiento,
+       m.observaciones,
+       m.fechaMantenimiento,
+       m.idEmpresaExterna
+     FROM Mantenimiento m
+     JOIN Vehiculo v ON m.idVehiculo = v.idVehiculo
+     JOIN tipoMantenimiento tm ON m.idTipoMantenimiento = tm.idTipoMantenimiento
+     WHERE v.placa = ?
+     ORDER BY m.fechaMantenimiento DESC`,
+    [placa]
+  );
+  return rows;
+}
+
 
   // Crear nuevo registro de mantenimiento
   static async create(mantenimientoData) {
-    const { placa, id_tipo_mantenimiento, observaciones, fecha_mantenimiento } =
-      mantenimientoData;
+    const {idTipoMantenimiento, idVehiculo, idEmpresaExterna, observaciones, fechaMantenimiento } = mantenimientoData;
 
-    const [result] = await db.execute(
-      `
-      INSERT INTO mantenimiento (placa, id_tipo_mantenimiento, observaciones, fecha_mantenimiento)
-      VALUES (?, ?, ?, ?)
-      `,
-      [placa, id_tipo_mantenimiento, observaciones, fecha_mantenimiento]
-    );
+    const [result] = await db.execute(`
+      INSERT INTO mantenimiento (idVehiculo, idTipoMantenimiento, idEmpresaExterna, observaciones, fechaMantenimiento)
+      VALUES (?, ?, ?, ?,?)
+    `, [idVehiculo, idTipoMantenimiento, idEmpresaExterna, observaciones, fechaMantenimiento]);
 
     return result.insertId; // Retorna el ID generado automáticamente
   }
 
-  //actualizar registro de mantenimiento existente
+  // Actualizar registro de mantenimiento existente
   static async update(id, mantenimientoData) {
-    const { placa, id_tipo_mantenimiento, observaciones, fecha_mantenimiento } =
-      mantenimientoData;
+    const {idVehiculo, idTipoMantenimiento, idEmpresaExterna, observaciones, fechaMantenimiento } = mantenimientoData;
 
-    const [result] = await db.execute(
-      `
+    const [result] = await db.execute(`
       UPDATE mantenimiento
-      SET placa = ?, id_tipo_mantenimiento = ?, observaciones = ?, fecha_mantenimiento = ?
-      WHERE id_mantenimiento = ?
-      `,
-      [placa, id_tipo_mantenimiento, observaciones, fecha_mantenimiento, id]
-    );
+      SET idVehiculo = ?, idTipoMantenimiento = ?, idEmpresaExterna = ?, observaciones = ?, fechaMantenimiento = ?
+      WHERE idMantenimiento = ?
+    `, [idVehiculo, idTipoMantenimiento, idEmpresaExterna, observaciones, fechaMantenimiento, id]);
 
     return result.affectedRows; // 1 si se actualizó correctamente
   }
 
   // Eliminar registro de mantenimiento por su ID
   static async delete(id) {
-    const [result] = await db.execute(
-      `DELETE FROM mantenimiento WHERE id_mantenimiento = ?`,
-      [id]
-    );
+    const [result] = await db.execute(`
+      DELETE FROM mantenimiento WHERE idMantenimiento = ?
+    `, [id]);
     return result.affectedRows; // 1 si se eliminó correctamente
   }
 }
-
 
 export default Mantenimiento;

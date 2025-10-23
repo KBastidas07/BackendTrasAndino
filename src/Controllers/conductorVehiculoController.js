@@ -1,8 +1,7 @@
 import { errorTypes } from "../middlewares/errorHandler.js";
 import ConductorVehiculo from "../models/conductorVehiculoModel.js";
-import Persona from "../models/personaModel.js";
 
-//Obtener todos los registros de conductorVehiculo
+// Obtener todos los registros de ConductorVehiculo
 export const getAllConductorVehiculo = async (req, res, next) => {
   try {
     const conductores = await ConductorVehiculo.findAll();
@@ -20,7 +19,7 @@ export const getAllConductorVehiculo = async (req, res, next) => {
   }
 };
 
-//Obtener un registro de conductorVehiculo por su ID
+// Obtener un registro de ConductorVehiculo por su ID
 export const getConductorVehiculoById = async (req, res, next) => {
   try {
     const conductor = await ConductorVehiculo.findById(req.params.id);
@@ -32,70 +31,72 @@ export const getConductorVehiculoById = async (req, res, next) => {
       data: conductor,
     });
   } catch (error) {
-    console.error("  Error al obtener el conductor:", error);
-    res.status(500).json({ error: "Error al obtener el registro" });
-  }
-};
-
-//crear un nuevo registro de conductorVehiculo
-export const createConductorVehiculo = async (req, res, next) => {
-  try {
-    const { id_persona } = req.body;
-
-    // Verificar que la persona existe y obtener sus datos
-    const persona = await Persona.findById(id_persona);
-    if (!persona) {
-      throw errorTypes.NotFoundError("La persona no existe");
-    }
-
-    // Verificar que la persona no sea un ASOCIADO
-    if (persona.rol === "ASOCIADO") {
-      throw errorTypes.ValidationError("Un ASOCIADO no puede ser asignado como conductor");
-    }
-
-    // Verificar que la persona sea un CONDUCTOR
-    if (persona.rol !== "CONDUCTOR") {
-      throw errorTypes.ValidationError("Solo se pueden asignar personas con rol CONDUCTOR");
-    }
-
-    const newId = await ConductorVehiculo.create(req.body);
-    res.status(201).json({
-      status: "success",
-      message: "ConductorVehiculo creado exitosamente",
-      data: { id: newId }
-    });
-  } catch (error) {
-    console.error("  Error al crear conductor-vehículo:", error);
+    console.error("Error al obtener el conductor:", error);
     next(error);
   }
 };
 
-//Actualizar un registro existente de conductorVehiculo
-export const updateConductorVehiculo = async (req, res) => {
+// Crear un nuevo registro de ConductorVehiculo
+export const createConductorVehiculo = async (req, res, next) => {
+  try {
+    // Validar campos obligatorios
+    const { idPersona, idVehiculo, jornada, fechaInicio } = req.body;
+    if (!idPersona || !idVehiculo || !jornada || !fechaInicio) {
+      throw errorTypes.ValidationError(
+        "Los campos idPersona, idVehiculo, jornada y fechaInicio son obligatorios"
+      );
+    }
+
+    // Crear el registro usando el modelo
+    const newRecord = await ConductorVehiculo.create(req.body);
+
+    res.status(201).json({
+      status: "success",
+      message: "ConductorVehiculo creado exitosamente",
+      data: newRecord,
+    });
+  } catch (error) {
+    console.error("Error al crear conductor-vehículo:", error);
+    next(error);
+  }
+};
+
+// Actualizar un registro existente de ConductorVehiculo
+export const updateConductorVehiculo = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updated = await ConductorVehiculo.update(id, req.body);
 
-    if (!updated) return res.status(404).json({ error: "No encontrado" });
+    if (!updated) {
+      return next(errorTypes.NotFoundError("Conductor-Vehículo no encontrado"));
+    }
 
-    res.json({ message: "ConductorVehiculo actualizado" });
+    res.json({ 
+      status: "success",
+      message: "ConductorVehiculo actualizado exitosamente"
+    });
   } catch (error) {
-    console.error("  Error al actualizar:", error);
-    res.status(500).json({ error: "Error al actualizar el registro" });
+    console.error("Error al actualizar:", error);
+    next(error);
   }
 };
 
-//eliminar un registro de conductorVehiculo
-export const deleteConductorVehiculo = async (req, res) => {
+// Eliminar un registro de ConductorVehiculo
+export const deleteConductorVehiculo = async (req, res, next) => {
   try {
     const { id } = req.params;
     const deleted = await ConductorVehiculo.delete(id);
 
-    if (!deleted) return res.status(404).json({ error: "No encontrado" });
+    if (!deleted) {
+      return next(errorTypes.NotFoundError("Conductor-Vehículo no encontrado"));
+    }
 
-    res.json({ message: "ConductorVehiculo eliminado" });
+    res.json({ 
+      status: "success",
+      message: "ConductorVehiculo eliminado exitosamente"
+    });
   } catch (error) {
-    console.error("  Error al eliminar:", error);
-    res.status(500).json({ error: "Error al eliminar el registro" });
+    console.error("Error al eliminar:", error);
+    next(error);
   }
 };

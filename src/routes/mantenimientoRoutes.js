@@ -1,34 +1,29 @@
 import express from 'express';
-
 import {
   getAllMantenimiento,
-  //getMantenimientoById,
   getMantenimientosByPlaca,
   createMantenimiento,
   updateMantenimiento,
   deleteMantenimiento
-
-
 } from '../Controllers/mantenimientoController.js';
 
 const router = express.Router();
 
-//Ruta para obtener todos los mantenimientos
+// Obtener todos los mantenimientos
 router.get('/listaMantenimientos', getAllMantenimiento);
 
-//Ruta para obtener un mantenimiento por ID
-//router.get('/buscarMantenimiento/:id', getMantenimientoById);
-
-//Ruta para obtener todos los mantenimientos asociados a una placa
+// Obtener todos los mantenimientos asociados a una placa
 router.get('/buscarMantenimientosPorPlaca/:placa', getMantenimientosByPlaca);
 
-//Ruta para crear un nuevo mantenimiento
+// Crear un nuevo mantenimiento
+// Body requerido: { placa, idTipoMantenimiento, idEmpresaExterna, fechaMantenimiento, observaciones (opcional) }
 router.post('/crearMantenimiento', createMantenimiento);
 
-//Ruta para actualizar un mantenimiento existente
+// Actualizar un mantenimiento existente
+// Body requerido: { placa, idTipoMantenimiento, idEmpresaExterna, fechaMantenimiento, observaciones (opcional) }
 router.put('/actualizarMantenimiento/:id', updateMantenimiento);
 
-//Ruta para eliminar un mantenimiento
+// Eliminar un mantenimiento
 router.delete('/eliminarMantenimiento/:id', deleteMantenimiento);
 
 export default router;

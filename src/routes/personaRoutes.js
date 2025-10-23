@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 import {
   getAllPersonas,
   getPersonaById,
@@ -7,31 +7,33 @@ import {
   updatePersona,
   deletePersona,
   getPersonasByRol,
-
-} from '../Controllers/personaController.js';
+  updateRolesPersona
+} from "../Controllers/personaController.js";
 
 const router = express.Router();
 
-// Ruta para obtener todas las personas
-router.get('/listaPersonas', getAllPersonas);
+// 🔹 Obtener todas las personas
+router.get("/listarPersonas", getAllPersonas);
 
-//Lista de personas con el rol especificado
-router.get('/listaPersonas/:rol', getPersonasByRol);
+// 🔹 Obtener persona por ID
+router.get("/buscarPorId/:id", getPersonaById);
 
-//Busca una persona por su número de cédula
-router.get('/buscarCedulaPersona/:cedula', getPersonaByCedula);
+// 🔹 Obtener persona por cédula
+router.get("/buscarPorCedula/:cedula", getPersonaByCedula);
 
-//Busca una persona por su ID
-router.get('/buscarIdPersona/:id', getPersonaById);
+// 🔹 Crear nueva persona
+router.post("/crearPersona", createPersona);
 
-// Ruta para crear una nueva persona
-router.post('/crearPersona', createPersona);
+// 🔹 Actualizar persona
+router.put("/actualizarPersona/:id", updatePersona);
 
-// Ruta para actualizar una persona existente
-router.put('/actualizarPersona/:id', updatePersona);
+// 🔹 Eliminar persona
+router.delete("/eliminarPersona/:id", deletePersona);
 
+// 🔹 Obtener personas por nombre de rol
+router.get("/buscarPorRol/:nombreRol", getPersonasByRol);
 
-// Ruta para eliminar una persona
-router.delete('/eliminarPersona/:id', deletePersona);
+// 🔹 Actualizar roles de una persona
+router.put("/actualizarRoles/:id", updateRolesPersona);
 
 export default router;

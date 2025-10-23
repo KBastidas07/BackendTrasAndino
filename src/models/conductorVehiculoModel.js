@@ -1,118 +1,110 @@
 import db from "../Conf/dbTasandino.js";
 
 class ConductorVehiculo {
-  // Obtiene todos los registros de la tabla ConductorVehiculo
-  // Incluye datos de la tabla Persona y Vehiculo
-
-  static async findAll() {
+  // Obtener todos los registros
+static async findAll() {
+  try {
     const [rows] = await db.execute(`
       SELECT cv.*, 
-             p.nombre_completo, 
-             p.apellido_completo,
-             p.rol,
+             p.nombreCompleto AS nombreCompleto, 
+             p.apellidoCompleto AS apellidoCompleto,
+             v.placa,
              v.marca,
              v.linea,
-             v.modelo
-      FROM conductorvehiculo cv
-      LEFT JOIN persona p ON cv.id_persona = p.id_persona
-      LEFT JOIN vehiculo v ON cv.placa = v.placa
-      ORDER BY cv.id_conductor_vehiculo DESC
+             v.modelo,
+             r.nombre AS rol
+      FROM ConductorVehiculo cv
+      LEFT JOIN Persona p ON cv.idPersona = p.idPersona
+      LEFT JOIN Vehiculo v ON cv.idVehiculo = v.idVehiculo
+      LEFT JOIN RolPersona rp ON rp.idPersona = p.idPersona
+      LEFT JOIN Rol r ON r.idRol = rp.idRol
+      ORDER BY cv.idConductorVehiculo DESC
     `);
-    // Devuelve todos los registros ordenados de más reciente a más antiguo
     return rows;
+  } catch (error) {
+    console.error("Error en findAll:", error);
+    throw error;
   }
+}
 
-  //Obtene un registro por su ID
+
+
+  // Obtener un registro por su ID
   static async findById(id) {
     const [rows] = await db.execute(
-      "SELECT * FROM conductorvehiculo WHERE id_conductor_vehiculo = ?",
+      "SELECT * FROM ConductorVehiculo WHERE idConductorVehiculo = ?",
       [id]
     );
-    // Retorna solo el primer resultado encontrado
     return rows[0];
   }
 
-  //Crea un nuevo registro en la tabla ConductorVehiculo
-  static async create(conductorVehiculoData) {
-    try {
-      const { id_persona, placa, jornada, fecha_inicio, fecha_fin } =
-        conductorVehiculoData;
+  // Crear un nuevo registro
+  static async create(data) {
+    const { idPersona, idVehiculo, jornada, estadoConductor, fechaInicio, fechaFin } = data;
 
-      // Validar campos requeridos
-      if (!id_persona || !placa || !jornada || !fecha_inicio) {
-        throw new Error(
-          "Los campos id_persona, placa, jornada y fecha_inicio son obligatorios"
-        );
-      }
-
-      // Verificar que la persona existe y es un conductor
-      const [personaRows] = await db.execute(
-        "SELECT rol FROM persona WHERE id_persona = ?",
-        [id_persona]
-      );
-
-      if (personaRows.length === 0) {
-        throw new Error("La persona no existe");
-      }
-
-      if (personaRows[0].rol !== "CONDUCTOR") {
-        throw new Error("La persona debe tener el rol de CONDUCTOR");
-      }
-
-      // Verificar que el vehículo existe
-      const [vehiculoRows] = await db.execute(
-        "SELECT placa FROM vehiculo WHERE placa = ?",
-        [placa]
-      );
-
-      if (vehiculoRows.length === 0) {
-        throw new Error("El vehículo no existe");
-      }
-
-      const [result] = await db.execute(
-        `INSERT INTO conductorvehiculo 
-          (id_persona, placa, jornada, fecha_inicio, fecha_fin)
-         VALUES (?, ?, ?, ?, ?)`,
-        [id_persona, placa, jornada, fecha_inicio, fecha_fin]
-      );
-
-      return {
-        id: result.insertId,
-        ...conductorVehiculoData,
-      };
-    } catch (error) {
-      throw error;
+    // Validar campos obligatorios
+    if (!idPersona || !idVehiculo || !jornada || !fechaInicio) {
+      throw new Error("Los campos idPersona, idVehiculo, jornada y fechaInicio son obligatorios");
     }
+
+    // Verificar que la persona existe
+    const [personaRows] = await db.execute(
+      "SELECT idPersona FROM Persona WHERE idPersona = ?",
+      [idPersona]
+    );
+    if (personaRows.length === 0) throw new Error("La persona no existe");
+
+    // Verificar que el vehículo existe
+    const [vehiculoRows] = await db.execute(
+      "SELECT idVehiculo FROM Vehiculo WHERE idVehiculo = ?",
+      [idVehiculo]
+    );
+    if (vehiculoRows.length === 0) throw new Error("El vehículo no existe");
+
+    // Insertar el registro
+    const [result] = await db.execute(
+      `INSERT INTO ConductorVehiculo 
+        (idPersona, idVehiculo, jornada, estadoConductor, fechaInicio, fechaFin)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [idPersona, idVehiculo, jornada, estadoConductor || "ACTIVO", fechaInicio, fechaFin || null]
+    );
+
+    return {
+      idConductorVehiculo: result.insertId,
+      ...data
+    };
   }
 
-  //Actualiza un registro existente en la tabla ConductorVehiculo
-  static async update(id, conductorVehiculoData) {
-    const { jornada, fecha_inicio, fecha_fin } = conductorVehiculoData;
+  // Actualizar registro existente
+  static async update(id, data) {
+    const { jornada, estadoConductor, fechaInicio, fechaFin } = data;
 
-    // Validar que los campos requeridos estén presentes
-    if (!jornada && !fecha_inicio && !fecha_fin) {
-      throw new Error("No se proporcionaron campos para actualizar");
-    }
+    // Filtrar solo los campos que vienen
+    const updates = [];
+    const values = [];
+    if (jornada) { updates.push("jornada = ?"); values.push(jornada); }
+    if (estadoConductor) { updates.push("estadoConductor = ?"); values.push(estadoConductor); }
+    if (fechaInicio) { updates.push("fechaInicio = ?"); values.push(fechaInicio); }
+    if (fechaFin) { updates.push("fechaFin = ?"); values.push(fechaFin); }
 
-    // Ejecutar el UPDATE sin tocar id_persona ni placa
+    if (updates.length === 0) throw new Error("No se proporcionaron campos para actualizar");
+
     const [result] = await db.execute(
-      `UPDATE conductorvehiculo
-     SET jornada = ?, fecha_inicio = ?, fecha_fin = ?
-     WHERE id_conductor_vehiculo = ?`,
-      [jornada, fecha_inicio, fecha_fin, id]
+      `UPDATE ConductorVehiculo SET ${updates.join(", ")} WHERE idConductorVehiculo = ?`,
+      [...values, id]
     );
 
     return result.affectedRows;
   }
 
-  //Elimina un registro de la tabla ConductorVehiculo por su ID
+  // Eliminar registro
   static async delete(id) {
     const [result] = await db.execute(
-      "DELETE FROM conductorvehiculo WHERE id_conductor_vehiculo = ?",
+      "DELETE FROM ConductorVehiculo WHERE idConductorVehiculo = ?",
       [id]
     );
-    // Retorna la cantidad de filas eliminadas
     return result.affectedRows;
   }
 }
+
 export default ConductorVehiculo;

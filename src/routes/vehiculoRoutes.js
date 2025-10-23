@@ -9,19 +9,19 @@ import {
 
 const router = express.Router();
 
-//Ruta para obtener todos los vehiculos
-router.get("/listaVehiculos", getAllVehiculos);
+// Obtener todos los vehículos
+router.get("/vehiculos", getAllVehiculos);
 
-//Ruta para buscar un vehiculo por su placa
-router.get("/buscarPlacaVehiculo/:placa", getVehiculoByPlaca);
+// Obtener un vehículo por placa
+router.get("/vehiculos/:placa", getVehiculoByPlaca);
 
-//Ruta para crear un nuevo vehiculo
-router.post("/crearVehiculo", createVehiculo);
+// Crear un nuevo vehículo
+router.post("/vehiculos", createVehiculo);
 
-//Ruta para actualizar un vehiculo existente
-router.put("/actualizarVehiculo/:placa", updateVehiculo);
+// Actualizar un vehículo por placa
+router.put("/vehiculos/:placa", updateVehiculo);
 
-//Ruta para eliminar un vehiculo
-router.delete("/eliminarVehiculo/:placa", deleteVehiculo);
+// Eliminar un vehículo por placa
+router.delete("/vehiculos/:placa", deleteVehiculo);
 
 export default router;

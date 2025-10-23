@@ -9,19 +9,21 @@ import {
 
 const router = express.Router();
 
-// Ruta para obtener todos los tipos de documento de vehículo
+// Obtener todos los tipos de documento de vehículo
 router.get('/listaTipoDocumentoVehiculo', getAllTipoDocumentoVehiculo);
 
-// Ruta para obtener un tipo de documento de vehículo por ID
+// Obtener un tipo de documento de vehículo por ID
 router.get('/buscarTipoDocumentoVehiculo/:id', getTipoDocumentoVehiculoById);
 
-// Ruta para crear un nuevo tipo de documento de vehículo
+// Crear un nuevo tipo de documento de vehículo
+// Body requerido: { nombre, idEmpresaExterna }
 router.post('/crearTipoDocumentoVehiculo', createTipoDocumentoVehiculo);
 
-// Ruta para actualizar un tipo de documento de vehículo existente
+// Actualizar un tipo de documento de vehículo existente
+// Body requerido: { nombre, idEmpresaExterna }
 router.put('/actualizarTipoDocumentoVehiculo/:id', updateTipoDocumentoVehiculo);
 
-// Ruta para eliminar un tipo de documento de vehículo
+// Eliminar un tipo de documento de vehículo
 router.delete('/eliminarTipoDocumentoVehiculo/:id', deleteTipoDocumentoVehiculo);
 
 export default router;

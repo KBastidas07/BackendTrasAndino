@@ -7,6 +7,7 @@ import mantenimientoRoutes from './routes/mantenimientoRoutes.js';
 import tipoMantenimientoRoutes from './routes/tipoMantenimientoRoutes.js';
 import documentoVehiculoRoutes from './routes/documentoVehiculoRoutes.js';
 import tipoDocumentoVehiculoRoutes from './routes/tipoDocumentoVehiculoRoutes.js';
+import empresaExternaRoutes from './routes/empresaExternaRoutes.js';
 import { handleError, notFound } from './middlewares/errorHandler.js';
 const app = express();
 
@@ -42,6 +43,7 @@ app.use('/api/mantenimientos', mantenimientoRoutes);
 app.use('/api/tipomantenimientos', tipoMantenimientoRoutes);
 app.use('/api/documentovehiculos', documentoVehiculoRoutes);
 app.use('/api/tipodocumentovehiculos', tipoDocumentoVehiculoRoutes);
+app.use('/api/empresasexternas', empresaExternaRoutes);
 
 
 //Manejo de rutas no encontradas

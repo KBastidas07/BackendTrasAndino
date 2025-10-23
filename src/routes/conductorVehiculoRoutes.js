@@ -5,24 +5,23 @@ import {
   createConductorVehiculo,
   updateConductorVehiculo,
   deleteConductorVehiculo,
-
 } from '../Controllers/conductorVehiculoController.js';
 
 const router = express.Router();
 
-//Ruta para obtener todos los conductorVehiculo
-router.get('/listaConductorvehiculo', getAllConductorVehiculo);
+// Obtener todos los registros de conductorVehiculo
+router.get('/conductor_vehiculos', getAllConductorVehiculo);
 
-//Ruta para buscar un conductorVehiculo por su ID
-router.get('/buscarConductorVehiculo/:id', getConductorVehiculoById);
+// Obtener un registro de conductorVehiculo por su ID
+router.get('/conductor_vehiculos/:id', getConductorVehiculoById);
 
-//Ruta para crear un nuevo conductorVehiculo
-router.post('/crearConductorVehiculo', createConductorVehiculo);
+// Crear un nuevo registro de conductorVehiculo
+router.post('/conductor_vehiculos', createConductorVehiculo);
 
-//Ruta para actualizar un conductorVehiculo existente
-router.put('/actualizarConductorVehiculo/:id', updateConductorVehiculo);
+// Actualizar un registro existente de conductorVehiculo
+router.put('/conductor_vehiculos/:id', updateConductorVehiculo);
 
-//Ruta para eliminar un conductorVehiculo
-router.delete('/eliminarConductorVehiculo/:id', deleteConductorVehiculo);
+// Eliminar un registro de conductorVehiculo
+router.delete('/conductor_vehiculos/:id', deleteConductorVehiculo);
 
 export default router;
