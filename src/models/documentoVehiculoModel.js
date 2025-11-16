@@ -3,7 +3,7 @@ import db from "../Conf/dbTasandino.js";
 class DocumentoVehiculo {
   // Obtener todos los documentos de vehículos
   static async findAll() {
-  const [rows] = await db.execute(`
+    const [documentovehiculo] = await db.execute(`
     SELECT 
       dv.idDocumento,
       dv.placa,
@@ -20,9 +20,8 @@ class DocumentoVehiculo {
     LEFT JOIN empresaExterna ee ON tdv.idEmpresaExterna = ee.idEmpresaExterna
     ORDER BY dv.fechaVencimiento DESC
   `);
-  return rows;
-}
-
+    return documentovehiculo;
+  }
 
   // Buscar documento por su ID
   /*static async findById(id) {
@@ -46,10 +45,10 @@ class DocumentoVehiculo {
     return rows[0]; // Devuelve un solo registro
   };
 */
-// Buscar documentos por placa
-static async findByPlaca(placa) {
-  const [rows] = await db.execute(
-    `SELECT 
+  // Buscar documentos por placa
+  static async findByPlaca(placa) {
+    const [documentovehiculo] = await db.execute(
+      `SELECT 
        d.idDocumento,
        d.placa,
        v.marca,
@@ -64,54 +63,63 @@ static async findByPlaca(placa) {
      LEFT JOIN tipoDocumentoVehiculo td ON d.idTipoDocumento = td.idTipoDocumento
      LEFT JOIN empresaExterna ee ON td.idEmpresaExterna = ee.idEmpresaExterna
      WHERE d.placa = ?`,
-    [placa]
-  );
-  return rows;
-}
-
-
+      [placa]
+    );
+    return documentovehiculo;
+  }
 
   // Crear nuevo documento de vehículo
-static async create(documentoData) {
-  const {
-    placa,
-    idTipoDocumento,
-    fechaEmision,
-    fechaVencimiento,
-    estadoDocVehiculo
-  } = documentoData;
+  static async create(documentoData) {
+    const {
+      placa,
+      idTipoDocumento,
+      fechaEmision,
+      fechaVencimiento,
+      estadoDocVehiculo,
+    } = documentoData;
 
-  const [result] = await db.execute(
-    `INSERT INTO documentoVehiculo 
+    const [result] = await db.execute(
+      `INSERT INTO documentoVehiculo 
       (placa, idTipoDocumento, fechaEmision, fechaVencimiento, estadoDocVehiculo)
      VALUES (?, ?, ?, ?, ?)`,
-    [placa, idTipoDocumento, fechaEmision, fechaVencimiento, estadoDocVehiculo]
-  );
+      [
+        placa,
+        idTipoDocumento,
+        fechaEmision,
+        fechaVencimiento,
+        estadoDocVehiculo,
+      ]
+    );
 
-  return result.insertId;
-}
-
+    return result.insertId;
+  }
 
   // Actualizar documento existente
-static async update(id, documentoData) {
-  const {
-    placa,
-    idTipoDocumento,
-    fechaEmision,
-    fechaVencimiento,
-    estadoDocVehiculo
-  } = documentoData;
+  static async update(id, documentoData) {
+    const {
+      placa,
+      idTipoDocumento,
+      fechaEmision,
+      fechaVencimiento,
+      estadoDocVehiculo,
+    } = documentoData;
 
-  const [result] = await db.execute(
-    `UPDATE documentoVehiculo
+    const [result] = await db.execute(
+      `UPDATE documentoVehiculo
      SET placa = ?, idTipoDocumento = ?, fechaEmision = ?, fechaVencimiento = ?, estadoDocVehiculo = ?
      WHERE idDocumento = ?`,
-    [placa, idTipoDocumento, fechaEmision, fechaVencimiento, estadoDocVehiculo, id]
-  );
+      [
+        placa,
+        idTipoDocumento,
+        fechaEmision,
+        fechaVencimiento,
+        estadoDocVehiculo,
+        id,
+      ]
+    );
 
-  return result.affectedRows;
-}
-
+    return result.affectedRows;
+  }
 
   // Eliminar documento por su ID
   static async delete(id) {

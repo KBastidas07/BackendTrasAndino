@@ -1,4 +1,5 @@
 import express from "express";
+import validarToken from "../middlewares/validarToken.js";
 import {
     getAllTipoMantenimiento,
     getTipoMantenimientoById,
@@ -8,6 +9,8 @@ import {
 } from '../Controllers/tipoMantenimientoController.js';
 
 const router = express.Router();
+
+router.use(validarToken);
 
 // Ruta para obtener todos los tipos de mantenimiento
 router.get('/listaTipoMantenimiento', getAllTipoMantenimiento);

@@ -1,4 +1,5 @@
 import express from 'express';
+import validarToken from "../middlewares/validarToken.js";
 import {
   getAllMantenimiento,
   getMantenimientosByPlaca,
@@ -9,6 +10,8 @@ import {
 
 const router = express.Router();
 
+router.use(validarToken);
+
 // Obtener todos los mantenimientos
 router.get('/listaMantenimientos', getAllMantenimiento);
 
@@ -16,11 +19,9 @@ router.get('/listaMantenimientos', getAllMantenimiento);
 router.get('/buscarMantenimientosPorPlaca/:placa', getMantenimientosByPlaca);
 
 // Crear un nuevo mantenimiento
-// Body requerido: { placa, idTipoMantenimiento, idEmpresaExterna, fechaMantenimiento, observaciones (opcional) }
 router.post('/crearMantenimiento', createMantenimiento);
 
 // Actualizar un mantenimiento existente
-// Body requerido: { placa, idTipoMantenimiento, idEmpresaExterna, fechaMantenimiento, observaciones (opcional) }
 router.put('/actualizarMantenimiento/:id', updateMantenimiento);
 
 // Eliminar un mantenimiento

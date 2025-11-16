@@ -5,22 +5,22 @@ class TipoDocumentoVehiculo {
 
   // Obtener todos los tipos de documento de vehículo con el nombre de la empresa externa asociada
   static async findAll() {
-    const [rows] = await db.execute(`
+    const [TipoDocumentos] = await db.execute(`
       SELECT tdv.*, ee.NombreEncargado
       FROM tipodocumentovehiculo tdv
       LEFT JOIN empresaexterna ee ON tdv.idEmpresaExterna = ee.idEmpresaExterna
       ORDER BY tdv.idTipoDocumento ASC
     `);
-    return rows;
+    return TipoDocumentos;
   }
 
   // Obtener un tipo de documento de vehículo por ID
   static async findById(id) {
-    const [rows] = await db.execute(
+    const [TipoDocumentosId] = await db.execute(
       "SELECT * FROM tipodocumentovehiculo WHERE idTipoDocumento = ?",
       [id]
     );
-    return rows[0];
+    return TipoDocumentosId [0];
   }
 
   //crear un nuevo tipo de documento de vehículo

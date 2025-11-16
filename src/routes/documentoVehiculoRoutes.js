@@ -1,4 +1,5 @@
 import express from "express";
+import validarToken from "../middlewares/validarToken.js";
 import {
     getAllDocumentoVehiculo,
     //getDocumentoVehiculoById,
@@ -10,8 +11,10 @@ import {
 
 const router = express.Router();
 
+router.use(validarToken);
+
 // Ruta para obtener todos los documentos de vehículos
-router.get('/listaDocumentoVehiculo', getAllDocumentoVehiculo);
+router.get('/listaDocumentoVehiculo',getAllDocumentoVehiculo);
 
 // Ruta para obtener un documento de vehículo por ID
 //router.get('/buscarDocumentoVehiculo/:id', getDocumentoVehiculoById);

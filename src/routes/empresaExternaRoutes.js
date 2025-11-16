@@ -1,4 +1,5 @@
 import express from 'express';
+import validarToken from "../middlewares/validarToken.js";
 import {
   getAllEmpresaExterna,
   getEmpresaExternaById,
@@ -8,6 +9,8 @@ import {
 } from '../Controllers/empresaExternaController.js';
 
 const router = express.Router();
+
+router.use(validarToken);
 
 // ruta para listar todas las empresas externas
 router.get('/listaEmpresaExterna', getAllEmpresaExterna);

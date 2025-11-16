@@ -3,17 +3,17 @@ import db from "../Conf/dbTasandino.js";
 class TipoMantenimiento {
      // Obtener todos los tipos
   static async findAll() {
-    const [rows] = await db.execute("SELECT * FROM TipoMantenimiento ORDER BY idTipoMantenimiento ASC");
-    return rows;
+    const [tipoMantenimientos] = await db.execute("SELECT * FROM TipoMantenimiento ORDER BY idTipoMantenimiento ASC");
+    return tipoMantenimientos;
   }
 
   // Buscar tipo de mantenimineto por ID
   static async findById(id) {
-    const [rows] = await db.execute(
+    const [tipoMantenimientosId] = await db.execute(
       "SELECT * FROM TipoMantenimiento WHERE idTipoMantenimiento = ?",
       [id]
     );
-    return rows[0];
+    return tipoMantenimientosId [0];
   }
 
   // Crear nuevo tipo de mantenimineto

@@ -1,4 +1,5 @@
 import express from 'express';
+import validarToken from "../middlewares/validarToken.js";
 import {
   getAllConductorVehiculo,
   getConductorVehiculoById,
@@ -9,19 +10,21 @@ import {
 
 const router = express.Router();
 
+router.use(validarToken);
+
 // Obtener todos los registros de conductorVehiculo
-router.get('/conductor_vehiculos', getAllConductorVehiculo);
+router.get('/listarconductorVehiculos', getAllConductorVehiculo);
 
 // Obtener un registro de conductorVehiculo por su ID
-router.get('/conductor_vehiculos/:id', getConductorVehiculoById);
+router.get('/obtenerConductorVehiculos/:id' ,getConductorVehiculoById);
 
 // Crear un nuevo registro de conductorVehiculo
-router.post('/conductor_vehiculos', createConductorVehiculo);
+router.post('/crearConductorVehiculo' ,createConductorVehiculo);
 
 // Actualizar un registro existente de conductorVehiculo
-router.put('/conductor_vehiculos/:id', updateConductorVehiculo);
+router.put('/actualizarConductorVehiculo/:id', updateConductorVehiculo);
 
 // Eliminar un registro de conductorVehiculo
-router.delete('/conductor_vehiculos/:id', deleteConductorVehiculo);
+router.delete('/eliminarConductorVehiculos/:id', deleteConductorVehiculo);
 
 export default router;

@@ -1,4 +1,5 @@
 import express from "express";
+import validarToken from "../middlewares/validarToken.js";
 import {
     getAllTipoDocumentoVehiculo,
     getTipoDocumentoVehiculoById,
@@ -9,6 +10,8 @@ import {
 
 const router = express.Router();
 
+router.use(validarToken);
+
 // Obtener todos los tipos de documento de vehículo
 router.get('/listaTipoDocumentoVehiculo', getAllTipoDocumentoVehiculo);
 
@@ -16,11 +19,9 @@ router.get('/listaTipoDocumentoVehiculo', getAllTipoDocumentoVehiculo);
 router.get('/buscarTipoDocumentoVehiculo/:id', getTipoDocumentoVehiculoById);
 
 // Crear un nuevo tipo de documento de vehículo
-// Body requerido: { nombre, idEmpresaExterna }
 router.post('/crearTipoDocumentoVehiculo', createTipoDocumentoVehiculo);
 
 // Actualizar un tipo de documento de vehículo existente
-// Body requerido: { nombre, idEmpresaExterna }
 router.put('/actualizarTipoDocumentoVehiculo/:id', updateTipoDocumentoVehiculo);
 
 // Eliminar un tipo de documento de vehículo

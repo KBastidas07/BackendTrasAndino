@@ -71,9 +71,9 @@ export const updateConductorVehiculo = async (req, res, next) => {
       return next(errorTypes.NotFoundError("Conductor-Vehículo no encontrado"));
     }
 
-    res.json({ 
+    res.json({
       status: "success",
-      message: "ConductorVehiculo actualizado exitosamente"
+      message: "ConductorVehiculo actualizado exitosamente",
     });
   } catch (error) {
     console.error("Error al actualizar:", error);
@@ -91,9 +91,9 @@ export const deleteConductorVehiculo = async (req, res, next) => {
       return next(errorTypes.NotFoundError("Conductor-Vehículo no encontrado"));
     }
 
-    res.json({ 
+    res.json({
       status: "success",
-      message: "ConductorVehiculo eliminado exitosamente"
+      message: "ConductorVehiculo eliminado exitosamente",
     });
   } catch (error) {
     console.error("Error al eliminar:", error);

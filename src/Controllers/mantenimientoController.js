@@ -5,11 +5,13 @@ import Mantenimiento from "../models/mantenimientoModel.js";
 export const getAllMantenimiento = async (req, res, next) => {
   try {
     const mantenimientos = await Mantenimiento.findAll();
-    console.log(`  Enviando respuesta con ${mantenimientos.length} mantenimientos`);
+    console.log(
+      `  Enviando respuesta con ${mantenimientos.length} mantenimientos`
+    );
     res.status(200).json({
       status: "success",
       count: mantenimientos.length,
-      data: mantenimientos
+      data: mantenimientos,
     });
   } catch (error) {
     console.error("Error en getAllMantenimiento:", error);
@@ -24,13 +26,15 @@ export const getMantenimientosByPlaca = async (req, res, next) => {
     const mantenimientos = await Mantenimiento.findByPlaca(placa);
 
     if (!mantenimientos.length) {
-      throw errorTypes.NotFoundError("No se encontraron mantenimientos para esta placa");
+      throw errorTypes.NotFoundError(
+        "No se encontraron mantenimientos para esta placa"
+      );
     }
 
     res.status(200).json({
       status: "success",
       count: mantenimientos.length,
-      data: mantenimientos
+      data: mantenimientos,
     });
   } catch (error) {
     console.error("Error en getMantenimientosByPlaca:", error);
@@ -41,7 +45,12 @@ export const getMantenimientosByPlaca = async (req, res, next) => {
 // Crear un nuevo mantenimiento
 export const createMantenimiento = async (req, res, next) => {
   try {
-    const requiredFields = ["idVehiculo", "idTipoMantenimiento", "idEmpresaExterna", "fechaMantenimiento"];
+    const requiredFields = [
+      "idVehiculo",
+      "idTipoMantenimiento",
+      "idEmpresaExterna",
+      "fechaMantenimiento",
+    ];
     for (const field of requiredFields) {
       if (!req.body[field]) {
         throw errorTypes.ValidationError(`El campo ${field} es requerido`);
@@ -52,12 +61,16 @@ export const createMantenimiento = async (req, res, next) => {
     res.status(201).json({
       status: "success",
       message: "Mantenimiento creado exitosamente",
-      data: { id: newId }
+      data: { id: newId },
     });
   } catch (error) {
     console.error("  Error en createMantenimiento:", error);
     if (error.code === "ER_NO_REFERENCED_ROW_2") {
-      next(errorTypes.ValidationError("El vehículo, tipo de mantenimiento o empresa externa no existe"));
+      next(
+        errorTypes.ValidationError(
+          "El vehículo, tipo de mantenimiento o empresa externa no existe"
+        )
+      );
     } else {
       next(error);
     }
@@ -69,7 +82,12 @@ export const updateMantenimiento = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const requiredFields = ["idVehiculo", "idTipoMantenimiento", "idEmpresaExterna", "fechaMantenimiento"];
+    const requiredFields = [
+      "idVehiculo",
+      "idTipoMantenimiento",
+      "idEmpresaExterna",
+      "fechaMantenimiento",
+    ];
     for (const field of requiredFields) {
       if (!req.body[field]) {
         throw errorTypes.ValidationError(`El campo ${field} es requerido`);
@@ -83,12 +101,16 @@ export const updateMantenimiento = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      message: "Mantenimiento actualizado exitosamente"
+      message: "Mantenimiento actualizado exitosamente",
     });
   } catch (error) {
     console.error("  Error en updateMantenimiento:", error);
     if (error.code === "ER_NO_REFERENCED_ROW_2") {
-      next(errorTypes.ValidationError("El vehículo, tipo de mantenimiento o empresa externa no existe"));
+      next(
+        errorTypes.ValidationError(
+          "El vehículo, tipo de mantenimiento o empresa externa no existe"
+        )
+      );
     } else {
       next(error);
     }
@@ -107,7 +129,7 @@ export const deleteMantenimiento = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      message: "Mantenimiento eliminado exitosamente"
+      message: "Mantenimiento eliminado exitosamente",
     });
   } catch (error) {
     console.error("  Error en deleteMantenimiento:", error);

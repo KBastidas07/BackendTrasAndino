@@ -2,9 +2,9 @@ import db from "../Conf/dbTasandino.js";
 
 class ConductorVehiculo {
   // Obtener todos los registros
-static async findAll() {
-  try {
-    const [rows] = await db.execute(`
+  static async findAll() {
+    try {
+      const [conductorVehiculo] = await db.execute(`
       SELECT cv.*, 
              p.nombreCompleto AS nombreCompleto, 
              p.apellidoCompleto AS apellidoCompleto,
@@ -20,31 +20,48 @@ static async findAll() {
       LEFT JOIN Rol r ON r.idRol = rp.idRol
       ORDER BY cv.idConductorVehiculo DESC
     `);
-    return rows;
-  } catch (error) {
-    console.error("Error en findAll:", error);
-    throw error;
+      return conductorVehiculo;
+    } catch (error) {
+      console.error("Error en findAll:", error);
+      throw error;
+    }
   }
-}
-
-
 
   // Obtener un registro por su ID
   static async findById(id) {
-    const [rows] = await db.execute(
-      "SELECT * FROM ConductorVehiculo WHERE idConductorVehiculo = ?",
+    const [conductorVehiculo] = await db.execute(
+      `
+    SELECT 
+      cv.*, 
+      p.nombreCompleto,
+      p.cedula,
+      v.placa
+    FROM ConductorVehiculo cv
+    INNER JOIN Persona p ON cv.idPersona = p.idPersona
+    INNER JOIN Vehiculo v ON cv.idVehiculo = v.idVehiculo
+    WHERE cv.idConductorVehiculo = ?
+    `,
       [id]
     );
-    return rows[0];
+    return conductorVehiculo[0];
   }
 
   // Crear un nuevo registro
   static async create(data) {
-    const { idPersona, idVehiculo, jornada, estadoConductor, fechaInicio, fechaFin } = data;
+    const {
+      idPersona,
+      idVehiculo,
+      jornada,
+      estadoConductor,
+      fechaInicio,
+      fechaFin,
+    } = data;
 
     // Validar campos obligatorios
     if (!idPersona || !idVehiculo || !jornada || !fechaInicio) {
-      throw new Error("Los campos idPersona, idVehiculo, jornada y fechaInicio son obligatorios");
+      throw new Error(
+        "Los campos idPersona, idVehiculo, jornada y fechaInicio son obligatorios"
+      );
     }
 
     // Verificar que la persona existe
@@ -66,12 +83,19 @@ static async findAll() {
       `INSERT INTO ConductorVehiculo 
         (idPersona, idVehiculo, jornada, estadoConductor, fechaInicio, fechaFin)
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [idPersona, idVehiculo, jornada, estadoConductor || "ACTIVO", fechaInicio, fechaFin || null]
+      [
+        idPersona,
+        idVehiculo,
+        jornada,
+        estadoConductor || "ACTIVO",
+        fechaInicio,
+        fechaFin || null,
+      ]
     );
 
     return {
       idConductorVehiculo: result.insertId,
-      ...data
+      ...data,
     };
   }
 
@@ -82,15 +106,30 @@ static async findAll() {
     // Filtrar solo los campos que vienen
     const updates = [];
     const values = [];
-    if (jornada) { updates.push("jornada = ?"); values.push(jornada); }
-    if (estadoConductor) { updates.push("estadoConductor = ?"); values.push(estadoConductor); }
-    if (fechaInicio) { updates.push("fechaInicio = ?"); values.push(fechaInicio); }
-    if (fechaFin) { updates.push("fechaFin = ?"); values.push(fechaFin); }
+    if (jornada) {
+      updates.push("jornada = ?");
+      values.push(jornada);
+    }
+    if (estadoConductor) {
+      updates.push("estadoConductor = ?");
+      values.push(estadoConductor);
+    }
+    if (fechaInicio) {
+      updates.push("fechaInicio = ?");
+      values.push(fechaInicio);
+    }
+    if (fechaFin) {
+      updates.push("fechaFin = ?");
+      values.push(fechaFin);
+    }
 
-    if (updates.length === 0) throw new Error("No se proporcionaron campos para actualizar");
+    if (updates.length === 0)
+      throw new Error("No se proporcionaron campos para actualizar");
 
     const [result] = await db.execute(
-      `UPDATE ConductorVehiculo SET ${updates.join(", ")} WHERE idConductorVehiculo = ?`,
+      `UPDATE ConductorVehiculo SET ${updates.join(
+        ", "
+      )} WHERE idConductorVehiculo = ?`,
       [...values, id]
     );
 

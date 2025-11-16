@@ -1,20 +1,21 @@
 import db from "../Conf/dbTasandino.js";
 
 class EmpresaExterna {
-
   // Obtener todos los registros
   static async findAll() {
-    const [rows] = await db.execute("SELECT * FROM EmpresaExterna ORDER BY idEmpresaExterna ASC");
-    return rows;
+    const [empresaExterna] = await db.execute(
+      "SELECT * FROM EmpresaExterna ORDER BY idEmpresaExterna ASC"
+    );
+    return empresaExterna;
   }
 
   // Obtener un registro por ID
   static async findById(id) {
-    const [rows] = await db.execute(
+    const [empresaExterna] = await db.execute(
       "SELECT * FROM EmpresaExterna WHERE idEmpresaExterna = ?",
       [id]
     );
-    return rows[0];
+    return empresaExterna[0];
   }
 
   // Crear un nuevo registro
@@ -32,7 +33,9 @@ class EmpresaExterna {
     const { NombreEncargado, Celular, Direccion, Correo } = data;
 
     const cleanData = Object.fromEntries(
-      Object.entries({ NombreEncargado, Celular, Direccion, Correo }).filter(([_, v]) => v !== undefined)
+      Object.entries({ NombreEncargado, Celular, Direccion, Correo }).filter(
+        ([_, v]) => v !== undefined
+      )
     );
 
     const [result] = await db.query(

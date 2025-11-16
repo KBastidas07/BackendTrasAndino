@@ -4,13 +4,13 @@ class Vehiculo {
   // Obtener todos los vehículos
   static async findAll() {
     try {
-      const [rows] = await db.execute(`
+      const [vehiculos] = await db.execute(`
         SELECT v.*, p.nombreCompleto, p.apellidoCompleto
         FROM Vehiculo v
         LEFT JOIN Persona p ON v.idPersona = p.idPersona
         ORDER BY v.idVehiculo ASC
       `);
-      return rows;
+      return vehiculos;
     } catch (error) {
       console.error("Error en findAll:", error.message);
       throw error;
@@ -20,14 +20,14 @@ class Vehiculo {
   // Obtener vehículo por placa
   static async findByPlaca(placa) {
     try {
-      const [rows] = await db.execute(
+      const [vehiculosPlaca] = await db.execute(
         `SELECT v.*, p.nombreCompleto, p.apellidoCompleto
          FROM Vehiculo v
          LEFT JOIN Persona p ON v.idPersona = p.idPersona
          WHERE v.placa = ?`,
         [placa]
       );
-      return rows[0];
+      return vehiculosPlaca[0];
     } catch (error) {
       throw error;
     }
