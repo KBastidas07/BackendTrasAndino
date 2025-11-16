@@ -22,6 +22,7 @@ class Persona {
     }
   }
 
+ /*
   // Busca una persona por su ID
   static async findById(id) {
     try {
@@ -41,6 +42,7 @@ class Persona {
       throw error;
     }
   }
+    */
 
   // Busca una persona por su número de cédula
   static async findByCedula(cedula) {
@@ -221,7 +223,7 @@ class Persona {
   // Busca todas las personas por nombre de rol
   static async findByRol(nombreRol) {
     try {
-      const [rows] = await db.execute(
+      const [personasRol] = await db.execute(
         `
         SELECT p.*, r.nombre AS rol
         FROM Persona p
@@ -232,7 +234,7 @@ class Persona {
       `,
         [nombreRol]
       );
-      return rows;
+      return personasRol;
     } catch (error) {
       throw error;
     }

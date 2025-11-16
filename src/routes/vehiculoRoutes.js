@@ -22,7 +22,7 @@ router.get("/obtenerVehiculos/:placa", getVehiculoByPlaca);
 router.post("/crearVehiculos", createVehiculo);
 
 // Actualizar un vehículo por placa
-router.put("/actualzarVehiculos/:placa", updateVehiculo);
+router.put("/actualizarVehiculos/:placa", updateVehiculo);
 
 // Eliminar un vehículo por placa
 router.delete("/eliminarVehiculos/:placa", deleteVehiculo);

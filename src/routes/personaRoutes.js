@@ -2,7 +2,7 @@ import express from "express";
 import validarToken from "../middlewares/validarToken.js";
 import {
   getAllPersonas,
-  getPersonaById,
+  //getPersonaById,
   getPersonaByCedula,
   createPersona,
   updatePersona,
@@ -19,7 +19,7 @@ router.use(validarToken);
 router.get("/listarPersonas", getAllPersonas);
 
 // Obtener persona por ID
-router.get("/buscarPersonaPorId/:id", getPersonaById);
+//router.get("/buscarPersonaPorId/:id", getPersonaById);
 
 // Obtener persona por cédula
 router.get("/buscarPersonaPorCedula/:cedula", getPersonaByCedula);

@@ -2,7 +2,6 @@ import Persona from "../models/personaModel.js";
 import { errorTypes } from "../middlewares/errorHandler.js";
 import { validacionesGenerales } from "../Utils/Validaciones.js";
 
-
 // Obtener todas las personas
 export const getAllPersonas = async (req, res, next) => {
   try {
@@ -19,6 +18,7 @@ export const getAllPersonas = async (req, res, next) => {
   }
 };
 
+/*
 // Obtener persona por ID
 export const getPersonaById = async (req, res, next) => {
   try {
@@ -35,7 +35,7 @@ export const getPersonaById = async (req, res, next) => {
     next(error);
   }
 };
-
+*/
 // Obtener persona por cédula
 export const getPersonaByCedula = async (req, res, next) => {
   try {
@@ -66,7 +66,7 @@ export const createPersona = async (req, res, next) => {
       !personaData.apellidoCompleto ||
       !personaData.cedula
     ) {
-      throw new Error("Faltan campos obligatorios");
+      throw errorTypes.ValidationError("Faltan campos obligatorios");
     }
 
     // Validaciones específicas
@@ -130,7 +130,13 @@ export const updatePersona = async (req, res, next) => {
       validacionesGenerales.validarTelefono(otherData.telefono);
     }
 
-    const personaData = { nombreCompleto, apellidoCompleto, cedula, ...otherData, roles };
+    const personaData = {
+      nombreCompleto,
+      apellidoCompleto,
+      cedula,
+      ...otherData,
+      roles,
+    };
 
     const updatedPersona = await Persona.updateWithRoles(id, personaData);
 
@@ -146,7 +152,11 @@ export const updatePersona = async (req, res, next) => {
       return next(error);
     }
     // Si es un mensaje específico de not found, devolver 404
-    if (error && error.message && error.message.includes("Persona no encontrada")) {
+    if (
+      error &&
+      error.message &&
+      error.message.includes("Persona no encontrada")
+    ) {
       return next(errorTypes.NotFoundError(error.message));
     }
     next(error);

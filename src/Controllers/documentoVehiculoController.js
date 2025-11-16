@@ -97,13 +97,15 @@ export const createDocumentoVehiculo = async (req, res, next) => {
     });
   } catch (error) {
     console.error("  Error en createDocumentoVehiculo:", error);
-    if (error.code === "ER_NO_REFERENCED_ROW_2") {
-      next(
+    if (error && error.statusCode) {
+      return next(error);
+    }
+    if (error && error.code === "ER_NO_REFERENCED_ROW_2") {
+      return next(
         errorTypes.ValidationError("El vehículo o tipo de documento no existe")
       );
-    } else {
-      next(error);
     }
+    return next(error);
   }
 };
 
@@ -140,13 +142,15 @@ export const updateDocumentoVehiculo = async (req, res, next) => {
     });
   } catch (error) {
     console.error("  Error en updateDocumentoVehiculo:", error);
-    if (error.code === "ER_NO_REFERENCED_ROW_2") {
-      next(
+    if (error && error.statusCode) {
+      return next(error);
+    }
+    if (error && error.code === "ER_NO_REFERENCED_ROW_2") {
+      return next(
         errorTypes.ValidationError("El vehículo o tipo de documento no existe")
       );
-    } else {
-      next(error);
     }
+    return next(error);
   }
 };
 

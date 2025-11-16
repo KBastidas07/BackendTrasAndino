@@ -19,10 +19,10 @@ export const getAllConductorVehiculo = async (req, res, next) => {
   }
 };
 
-// Obtener un registro de ConductorVehiculo por su ID
-export const getConductorVehiculoById = async (req, res, next) => {
+// Obtener un registro de ConductorVehiculo por su Cedula
+export const getConductorVehiculoByCedula = async (req, res, next) => {
   try {
-    const conductor = await ConductorVehiculo.findById(req.params.id);
+    const conductor = await ConductorVehiculo.findByCedula(req.params.cedula);
     if (!conductor) {
       throw errorTypes.NotFoundError("Conductor-Vehículo no encontrado");
     }
@@ -35,6 +35,32 @@ export const getConductorVehiculoById = async (req, res, next) => {
     next(error);
   }
 };
+
+// Obtener conductores por placa
+export const getConductoresByPlaca = async (req, res, next) => {
+  try {
+    const { placa } = req.params;
+
+    const conductores = await ConductorVehiculo.findByPlaca(placa);
+
+    if (!conductores || conductores.length === 0) {
+      throw errorTypes.NotFoundError(
+        `No se encontraron conductores asociados al vehículo con placa ${placa}`
+      );
+    }
+
+    res.status(200).json({
+      status: "success",
+      total: conductores.length,
+      data: conductores,
+    });
+
+  } catch (error) {
+    console.error("Error al obtener conductores por placa:", error);
+    next(error);
+  }
+};
+
 
 // Crear un nuevo registro de ConductorVehiculo
 export const createConductorVehiculo = async (req, res, next) => {
@@ -57,7 +83,10 @@ export const createConductorVehiculo = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error al crear conductor-vehículo:", error);
-    next(error);
+    if (error && error.statusCode) {
+      return next(error);
+    }
+    return next(error);
   }
 };
 
@@ -77,7 +106,10 @@ export const updateConductorVehiculo = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error al actualizar:", error);
-    next(error);
+    if (error && error.statusCode) {
+      return next(error);
+    }
+    return next(error);
   }
 };
 
@@ -97,6 +129,9 @@ export const deleteConductorVehiculo = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error al eliminar:", error);
-    next(error);
+    if (error && error.statusCode) {
+      return next(error);
+    }
+    return next(error);
   }
 };

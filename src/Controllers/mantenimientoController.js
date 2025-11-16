@@ -65,15 +65,17 @@ export const createMantenimiento = async (req, res, next) => {
     });
   } catch (error) {
     console.error("  Error en createMantenimiento:", error);
-    if (error.code === "ER_NO_REFERENCED_ROW_2") {
-      next(
+    if (error && error.statusCode) {
+      return next(error);
+    }
+    if (error && error.code === "ER_NO_REFERENCED_ROW_2") {
+      return next(
         errorTypes.ValidationError(
           "El vehículo, tipo de mantenimiento o empresa externa no existe"
         )
       );
-    } else {
-      next(error);
     }
+    return next(error);
   }
 };
 
@@ -105,15 +107,17 @@ export const updateMantenimiento = async (req, res, next) => {
     });
   } catch (error) {
     console.error("  Error en updateMantenimiento:", error);
-    if (error.code === "ER_NO_REFERENCED_ROW_2") {
-      next(
+    if (error && error.statusCode) {
+      return next(error);
+    }
+    if (error && error.code === "ER_NO_REFERENCED_ROW_2") {
+      return next(
         errorTypes.ValidationError(
           "El vehículo, tipo de mantenimiento o empresa externa no existe"
         )
       );
-    } else {
-      next(error);
     }
+    return next(error);
   }
 };
 

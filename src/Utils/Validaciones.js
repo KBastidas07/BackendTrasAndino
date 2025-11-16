@@ -1,6 +1,6 @@
 import { errorTypes } from "../middlewares/errorHandler.js";
 
-//Validaciones Para Persona
+//Validaciones Generales
 export class validacionesGenerales {
   static validarCedula(cedula) {
     const regex = /^[0-9]{6,10}$/;

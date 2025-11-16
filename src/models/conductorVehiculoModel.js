@@ -27,10 +27,10 @@ class ConductorVehiculo {
     }
   }
 
-  // Obtener un registro por su ID
-  static async findById(id) {
+  // Obtener un registro por su Cedula
+  static async findByCedula(cedula) {
     const [conductorVehiculo] = await db.execute(
-      `
+`
     SELECT 
       cv.*, 
       p.nombreCompleto,
@@ -39,12 +39,32 @@ class ConductorVehiculo {
     FROM ConductorVehiculo cv
     INNER JOIN Persona p ON cv.idPersona = p.idPersona
     INNER JOIN Vehiculo v ON cv.idVehiculo = v.idVehiculo
-    WHERE cv.idConductorVehiculo = ?
+    WHERE p.cedula = ?
     `,
-      [id]
+      [cedula]
     );
     return conductorVehiculo[0];
   }
+
+  // Obtener todos los registros por Placa
+static async findByPlaca(placa) {
+  const [conductorVehiculo] = await db.execute(
+    `
+    SELECT 
+      cv.*, 
+      p.nombreCompleto,
+      p.cedula,
+      v.placa
+    FROM ConductorVehiculo cv
+    INNER JOIN Persona p ON cv.idPersona = p.idPersona
+    INNER JOIN Vehiculo v ON cv.idVehiculo = v.idVehiculo
+    WHERE v.placa = ?
+    `,
+    [placa]
+  );
+  return conductorVehiculo; // retorna todos los conductores asociados
+}
+
 
   // Crear un nuevo registro
   static async create(data) {

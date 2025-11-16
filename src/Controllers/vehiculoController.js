@@ -52,11 +52,13 @@ export const createVehiculo = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
-    if (error.message.includes("Ya existe un vehículo")) {
-      next(errorTypes.ConflictError(error.message));
-    } else {
-      next(error);
+    if (error && error.statusCode) {
+      return next(error);
     }
+    if (error && error.message && error.message.includes("Ya existe un vehículo")) {
+      return next(errorTypes.ConflictError(error.message));
+    }
+    return next(error);
   }
 };
 
@@ -99,14 +101,17 @@ export const deleteVehiculo = async (req, res, next) => {
       message: "Vehículo eliminado exitosamente",
     });
   } catch (error) {
-    if (error.code === "ER_ROW_IS_REFERENCED_2") {
-      next(
+    console.error("Error en deleteVehiculo:", error);
+    if (error && error.statusCode) {
+      return next(error);
+    }
+    if (error && error.code === "ER_ROW_IS_REFERENCED_2") {
+      return next(
         errorTypes.ConflictError(
           "No se puede eliminar el vehículo porque tiene registros asociados"
         )
       );
-    } else {
-      next(error);
     }
+    return next(error);
   }
 };
