@@ -1,8 +1,9 @@
 import { errorTypes } from "../middlewares/errorHandler.js";
 import { ValidacionLogin } from "../Utils/Validaciones.js";
 import jwt from "jsonwebtoken";
+import tokenBlacklist from "../middlewares/tokenBlacklist.js";
 
-const loginAdministrador = (req, res, next) => {
+export const loginAdministrador = async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
@@ -10,7 +11,6 @@ const loginAdministrador = (req, res, next) => {
     ValidacionLogin.validarUsername(username);
     ValidacionLogin.validarPassword(password);
 
-    // Variables de entorno
     const adminUsername = process.env.ADMIN_USERNAME;
     const adminPassword = process.env.ADMIN_PASSWORD;
     const jwtSecret = process.env.JWT_SECRET;
@@ -24,7 +24,7 @@ const loginAdministrador = (req, res, next) => {
       throw errorTypes.AuthenticationError("Credenciales inválidas");
     }
 
-    // Crear token válido por 5 horas
+    // Crear token
     const token = jwt.sign({ username }, jwtSecret, {
       expiresIn: "1h",
     });
@@ -38,11 +38,21 @@ const loginAdministrador = (req, res, next) => {
     console.error("Error en loginAdministrador:", error.message);
     next(error);
   }
-};
+}
 
-const logoutAdministrador = (req, res, next) => {
+export const logoutAdministrador =async (req, res, next)=> {
   try {
-    // Solo responder. El cliente debe borrar el token.
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      throw errorTypes.AuthenticationError("Token no proporcionado");
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    // Agregar a la blacklist
+    tokenBlacklist.add(token);
+
     return res.status(200).json({
       status: "success",
       message: "Sesión cerrada exitosamente",
@@ -51,6 +61,4 @@ const logoutAdministrador = (req, res, next) => {
     console.error("Error en logoutAdministrador:", error.message);
     next(error);
   }
-};
-
-export { loginAdministrador, logoutAdministrador };
+}

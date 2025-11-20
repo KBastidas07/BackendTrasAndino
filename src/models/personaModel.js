@@ -22,6 +22,8 @@ class Persona {
     }
   }
 
+  
+
  /*
   // Busca una persona por su ID
   static async findById(id) {

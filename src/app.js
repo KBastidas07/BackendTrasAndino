@@ -9,6 +9,7 @@ import documentoVehiculoRoutes from './routes/documentoVehiculoRoutes.js';
 import tipoDocumentoVehiculoRoutes from './routes/tipoDocumentoVehiculoRoutes.js';
 import empresaExternaRoutes from './routes/empresaExternaRoutes.js';
 import loginAdministradorRoutes from './routes/loginAdministradorRoutes.js';
+import consultaAsociadosRoutes from './routes/consultaAsociadosRoutes.js';
 import { handleError, notFound } from './middlewares/errorHandler.js';
 import dotenv from "dotenv";
 
@@ -51,7 +52,7 @@ app.use('/api/documentovehiculos', documentoVehiculoRoutes);
 app.use('/api/tipodocumentovehiculos', tipoDocumentoVehiculoRoutes);
 app.use('/api/empresasexternas', empresaExternaRoutes);
 app.use('/api/loginadministrador', loginAdministradorRoutes);
-
+app.use('/api/consultaasociados', consultaAsociadosRoutes);
 
 //Manejo de rutas no encontradas
 app.use(notFound);

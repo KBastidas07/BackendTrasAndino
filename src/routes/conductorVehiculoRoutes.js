@@ -22,7 +22,6 @@ router.get('/obtenerConductorVehiculos/:cedula' ,getConductorVehiculoByCedula);
 // Obtener todos los conductores asociados a una placa
 router.get('/obtenerConductorVehiculosPorPlaca/:placa', getConductoresByPlaca);
 
-
 // Crear un nuevo registro de conductorVehiculo
 router.post('/crearConductorVehiculo' ,createConductorVehiculo);
 

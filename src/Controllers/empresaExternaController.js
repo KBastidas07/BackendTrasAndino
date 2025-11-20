@@ -54,24 +54,38 @@ export const createEmpresaExterna = async (req, res, next) => {
 export const updateEmpresaExterna = async (req, res, next) => {
   try {
     const updated = await EmpresaExterna.update(req.params.id, req.body);
-    if (!updated)
-      return res.status(404).json({ error: "Empresa externa no encontrada" });
-    res.json({ message: "Empresa externa actualizada exitosamente" });
+
+    if (!updated) {
+      return next(errorTypes.NotFoundError("Empresa externa no encontrada"));
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Empresa externa actualizada exitosamente",
+    });
   } catch (error) {
     console.error("Error al actualizar empresa externa:", error);
-    next(error);
+    next(errorTypes.ServerError("Error al actualizar la empresa externa"));
   }
 };
+
 
 // Eliminar un registro
 export const deleteEmpresaExterna = async (req, res, next) => {
   try {
     const deleted = await EmpresaExterna.delete(req.params.id);
-    if (!deleted)
-      return res.status(404).json({ error: "Empresa externa no encontrada" });
-    res.json({ message: "Empresa externa eliminada exitosamente" });
+
+    if (!deleted) {
+      return next(errorTypes.NotFoundError("Empresa externa no encontrada"));
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Empresa externa eliminada exitosamente",
+    });
   } catch (error) {
     console.error("Error al eliminar empresa externa:", error);
-    next(error);
+    next(errorTypes.ServerError("Error al eliminar la empresa externa"));
   }
 };
+
